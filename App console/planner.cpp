@@ -1,40 +1,65 @@
-﻿#include <iostream>
+﻿#include "planner.h"
+#include <iostream>
 #include <iomanip>
-#include <thread>
-#include <chrono>
 #include <ctime>
 #include <string>
-#include <conio.h>
-#include <windows.h>
 using namespace std;
 
-void diChuyenCuaSo(int x, int y) {
-    COORD viTri = { (SHORT)x, (SHORT)y };
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), viTri);
-}
-int layDongCuoi() {
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return csbi.srWindow.Bottom;   // dòng cuối đang nhìn thấy
-}
+// Hàm lấy và in ngày giờ hiện tại
 void layTimer() {
-    while (true) {
-    diChuyenCuaSo(0, layDongCuoi());
     time_t tgian = time(nullptr);
-        tm localTime{};
-        localtime_s(&localTime, &tgian);
-        cout << "Ngay: " << put_time(&localTime, "%d/%m/%Y");
-        cout << " Gio: " << put_time(&localTime, "%H:%M") << flush;
-
-        this_thread::sleep_for(chrono::seconds(1));
-
-        //if (_kbhit()) break;   // bấm phím bất kỳ để thoát
-    }
+    tm lt{};
+    localtime_s(&lt, &tgian);
+    cout << put_time(&lt, "%d/%m/%Y");
 }
 
-int planner() {
-    cout << "===============================PLANNER===============================\n";
-    //cout << "(Nhan phim bat ky de thoat)\n";
-    layTimer();
+// Giao diện Task Manager lặp vô tận (infinity loop)
+int giaoDienPlan() {
+    int nhapNut;
+
+    while (true) {
+        system("cls"); // Xóa màn hình mỗi lần lặp lại để cập nhật giờ mới
+
+        // In tiêu đề kèm ngày giờ kế bên
+        cout << "============ TASK MANAGER | ";
+        layTimer();
+        cout << " ============\n";
+
+        cout << R"(
+[1] Them cong viec
+[2] Xem danh sach cong viec
+[3] Sap xep theo uu tien
+[0] Thoat
+)";
+        cout << "\nChon chuc nang: ";
+        cin >> nhapNut;
+
+        
+        if (nhapNut == 0) {
+            
+            break; // Thoát menu quay về màn hình chính
+        }
+        else if (nhapNut == 1) {
+            nhapPlan();
+        }
+        else if (nhapNut == 2) {
+            cout << "Chuc nang xem danh sach dang phat trien!\n";
+        }
+        else if (nhapNut == 3) {
+            cout << "Chuc nang sap xep dang phat trien!\n";
+        }
+        else {
+            cout << "Khong ton tai chuc nang!\n";
+        }
+
+        cout << "\nNhan Enter de tiep tuc...";
+        system("pause > nul"); // Dừng màn hình chờ người dùng bấm phím
+    }
+
     return 0;
+}
+
+void nhapPlan() {
+    planner dsViec[100];
+    cout << "Da goi ham nhap cong viec!\n";
 }
