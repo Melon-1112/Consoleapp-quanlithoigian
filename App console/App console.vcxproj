@@ -127,8 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Consoleapp-quanlithoigian\TimeZ-Conlose\plan.cpp" />
     <ClCompile Include="App console.cpp" />
+    <ClCompile Include="planner.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="planner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
