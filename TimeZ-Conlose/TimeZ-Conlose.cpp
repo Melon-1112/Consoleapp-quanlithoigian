@@ -5,7 +5,7 @@ int main()
 {
     int Connect;
 
-    cout << "\x1B[1;32m" <<R"(
+    cout << "\x1B[1;32m" << R"(
 //            ,----,                                                
 //          ,/   .`|                                         ,----, 
 //        ,`   .'  :                  ____                 .'   .`| 
@@ -25,11 +25,11 @@ int main()
 
 Welcome to TimeZ - Noi giup ban quan li cuoc song de dang hon
 1. Cai dat thoi khoa bieu trong ngay
-    )" << "\x1B[0m" <<endl;
-    cout<<"Nhap chuc nang ban chon: ";
-    cin>>Connect;
-    switch(Connect){
-        case 1:
+    )" << "\x1B[0m" << endl;
+    cout << "Nhap chuc nang ban chon: ";
+    cin >> Connect;
+    switch (Connect) {
+    case 1:
         system("code -r Thoikhoabieu.cpp");
         break;
 
@@ -39,7 +39,7 @@ Welcome to TimeZ - Noi giup ban quan li cuoc song de dang hon
 
 
 
-return 0;
+    return 0;
 }
 
 

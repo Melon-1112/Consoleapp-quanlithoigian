@@ -5,25 +5,25 @@
 using namespace std;
 //FUCKING AI AGENT
 //SUY NGHI CODE THUC HIEN NHU THE NAO TRUOC KHI RUN!
-void layTimer(){
+void layTimer() {
     string ngay, gio;
-    while(true){
-        time_t tgian =time(nullptr);
+    while (true) {
+        time_t tgian = time(nullptr);
         tm localTime{};
         localtime_s(&localTime, &tgian);
-        cin>> put_time(&localTime, "%d/%m/%Y" ) << endl;
-        cin>>;
+        cout << put_time(&localTime, "%d/%m/%Y") << endl;
+        //cin >> ;
 
 
         //cout << "Ngay hom nay: "<< put_time(&localTime, "%d/%m/%Y" ) << endl;
         //cout<< "Thoi gian: "<< put_time(&localTime ,"%H:%M")<< endl;
 
     }
-    
+
 }
 
 //Giao dien chinh
-int main() {
+int hehe() {
 
     return 0;
 
