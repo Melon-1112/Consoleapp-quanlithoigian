@@ -1,0 +1,21 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    float soTien, tongTien = 0;
+
+    cout << "=== QUAN LY CHI TIEU CA NHAN 1 THANG ===" << "\t";
+    cout << "Nhap so luong khoan chi trong thang: ";
+    cin >> n;
+
+    for (int i = 1; i <= n; i++) {
+        cout << "Nhap so tien cho khoan thu " << i << ": ";
+        cin >> soTien;
+        tongTien += soTien;
+    }
+
+    cout << "Tong so tien chi tieu trong thang la: " << tongTien << "\t";
+
+    return 0;
+}
