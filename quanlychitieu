@@ -5,7 +5,7 @@ int main() {
     int n;
     float soTien, tongTien = 0;
 
-    cout << "=== QUAN LY CHI TIEU CA NHAN 1 THANG ===" << "\t";
+    cout << " QUAN LY CHI TIEU CA NHAN 1 THANG " << "\t";
     cout << "Nhap so luong khoan chi trong thang: ";
     cin >> n;
 
