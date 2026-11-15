@@ -3,8 +3,18 @@
 #include "planner.h"
 using namespace std;
 
+void typingEffect(string text) {
+    for (int i = 0; i < text.length(); i++) {
+        cout << text[i];
+        cout.flush();
+        Sleep(100);
+    }
+
+}
+
 int main()
 {
+    
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
     int Connect;
@@ -27,11 +37,10 @@ int main()
 //                  ---`-'                  `----'  `---'           
 //                                                                  
 
-Welcome to TimeZ - Đồng hành giúp bạn quản lí cá nhân hiệu quả
     )ART" << "\x1B[0m\n";
-
+    typingEffect("Welcome to TimeZ - Dong hanh giup ban quan li ca nhan hieu qua");
     // Hien thi ngay gio hien tai
-    cout << "Hom nay:";
+    cout << endl<<"Hom nay:";
     layTimer();
     cout << "\n";
 

@@ -8,8 +8,8 @@ struct planner {
     std::string uuTien;
     bool tick;
 };
-
-// Khai báo các hàm
+//Khai bao ham
+void typingEffect();
 void layTimer();
 int giaoDienPlan();
 void nhapPlan();
