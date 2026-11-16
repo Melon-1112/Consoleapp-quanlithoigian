@@ -1,0 +1,38 @@
+# =========================================================
+#  Line-ending + binary rules
+#  * text=auto : git chuan hoa ve LF trong repo, moi may
+#                checkout theo cai dat cua may do -> khong con
+#                diff gia do CRLF/LF khi lam viec nhom.
+# =========================================================
+
+* text=auto
+
+# ---------- Source & project files (text) ----------
+*.c         text
+*.cpp       text
+*.h         text
+*.hpp       text
+*.sln       text
+*.vcxproj   text
+*.vcxproj.filters text
+*.md        text
+*.txt       text
+
+# ---------- Binary: git khong duoc dung den ----------
+*.exe       binary
+*.dll       binary
+*.lib       binary
+*.obj       binary
+*.pdb       binary
+*.ilk       binary
+*.idb       binary
+*.ipch      binary
+*.db        binary
+*.suo       binary
+*.vsidx     binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.zip       binary

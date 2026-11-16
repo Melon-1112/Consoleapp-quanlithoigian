@@ -1,0 +1,50 @@
+# =========================================================
+#  Consoleapp-quanlithoigian - Git ignore rules
+#  Muc tieu: chi commit SOURCE CODE + project files.
+#  Khong commit file build / IDE / may ca nhan.
+# =========================================================
+
+# ---------- Visual Studio (IDE state, per-user) ----------
+.vs/
+*.suo
+*.user
+*.rsuser
+*.ipch
+ipch/
+*.vsidx
+*.VC.db
+*.VC.db-shm
+*.VC.db-wal
+*.VC.opendb
+*.sln.docstates
+*.slnx.sqlite
+*.opendb
+
+# ---------- Build output (MSVC) ----------
+x64/
+Debug/
+Release/
+[Bb]in/
+[Oo]bj/
+*.obj
+*.iobj
+*.exe
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ipdb
+*.ilk
+*.idb
+*.tlog
+*.recipe
+*.log
+*.lastbuildstate
+*.res
+*.manifest
+*.FileListAbsolute.txt
+
+# ---------- OS / tooling ----------
+Thumbs.db
+desktop.ini
+.DS_Store
