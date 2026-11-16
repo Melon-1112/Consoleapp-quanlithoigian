@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <limits>
 #include <windows.h>
 #include "planner.h"
 using namespace std;
@@ -40,23 +41,43 @@ int main()
     )ART" << "\x1B[0m\n";
     typingEffect("Welcome to TimeZ - Dong hanh giup ban quan li ca nhan hieu qua");
     // Hien thi ngay gio hien tai
-    cout << endl<<"Hom nay:";
+    cout << endl <<"Hom nay:";
     layTimer();
     cout << "\n";
-
-    cout << "\x1B[1;32m---------------------------------------------------------------\n"
-         << "1. Tạo 1 Plan cá nhân\n\x1B[0m\n";
-    cout << "Nhap chuc nang ban chon: ";
-    cin >> Connect;
-    switch (Connect) {
-    case 1:
+    bool chay = true; //thêm vòng lặp, fix lỗi thêm công việc xong -> kết thúc chương trình//
+    while (chay)
+    {
         system("cls");
-        giaoDienPlan();
-        
-        break;
-    default:
-        cout << "Khong ton tai chuc nang\n";
-    }
+        cout << "\x1B[1;32m---------------------------------------------------------------\n"
+            << "1. Tạo 1 Plan cá nhân\n\x1B[0m"
+            << "2. Xem danh sách công việc \n\x1B[0m"
+            << "0. Thoát \n\x1B[0m\n ";
 
+        cout << "Nhap chuc nang ban chon: ";
+        cin >> Connect;
+        cin.ignore(1000, '\n'); //giống numeric_limits, nhưng cái này không bị xung đột với windows.h =)))//
+
+
+        switch (Connect) {
+        case 1:
+            system("cls");
+            nhapPlan(); //hàm thêm công việc
+            break;
+        case 2:
+            xemCongViec();   //xem danh sách
+            break;
+        case 0:
+            chay = false;
+            break;
+        default:
+            cout << "Khong ton tai chuc nang\n";
+        }
+
+        if (chay) {
+            cout << "\nNhan Enter de tiep tuc...";
+            system("pause > nul");   // pause tự đọc Enter, không cần ignore
+        }
+
+    }
     return 0;
 }

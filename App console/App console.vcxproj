@@ -136,9 +136,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App console.cpp" />
+    <ClCompile Include="healer.cpp" />
     <ClCompile Include="planner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="healer.h" />
     <ClInclude Include="planner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
