@@ -78,7 +78,7 @@ void nhapPlan() { //Chức năng thêm công việc, tuii làmmmm//
         cout << "\nDa dat gioi han 100 cong viec, khong the them moi!\n";
         return;
     }
-    cout << "======== THÊM CÔNG VIỆC ========\n";
+    cout << "\x1B[1;33m======== THÊM CÔNG VIỆC ========\x1B[0m\n";
     
     cout << " Nhập ngày (dd/mm/yy): ";// Thêm ngày vào phần tử soLuongViec (0) đầu tiên, với ten biến là "ngay"//
     getline(cin, dsViec[soLuongViec].ngay); //đọc một dòng văn bản hoàn chỉnh từ bàn phím, nhận khoảng trắng//

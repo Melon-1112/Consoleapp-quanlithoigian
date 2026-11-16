@@ -47,11 +47,11 @@ int main()
     bool chay = true; //thêm vòng lặp, fix lỗi thêm công việc xong -> kết thúc chương trình//
     while (chay)
     {
-        system("cls");
+        //system("cls");
         cout << "\x1B[1;32m---------------------------------------------------------------\n"
-            << "1. Tạo 1 Plan cá nhân\n\x1B[0m"
-            << "2. Xem danh sách công việc \n\x1B[0m"
-            << "0. Thoát \n\x1B[0m\n ";
+            << " 1. Tạo 1 Plan cá nhân" << endl
+            << " 2. Xem danh sách công việc" << endl
+            << " 0. Thoát \n\x1B[0m\n "<< endl;
 
         cout << "Nhap chuc nang ban chon: ";
         cin >> Connect;
