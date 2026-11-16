@@ -2,6 +2,7 @@
 #include <limits>
 #include <windows.h>
 #include "planner.h"
+#include "healer.h"
 using namespace std;
 
 void typingEffect(string text) {
@@ -51,13 +52,12 @@ int main()
         cout << "\x1B[1;32m---------------------------------------------------------------\n"
             << " 1. Tạo 1 Plan cá nhân" << endl
             << " 2. Xem danh sách công việc" << endl
+            << " 3. Đến quản lí calories " << endl
             << " 0. Thoát \n\x1B[0m\n "<< endl;
 
         cout << "Nhap chuc nang ban chon: ";
         cin >> Connect;
         cin.ignore(1000, '\n'); //giống numeric_limits, nhưng cái này không bị xung đột với windows.h =)))//
-
-
         switch (Connect) {
         case 1:
             system("cls");
@@ -65,6 +65,9 @@ int main()
             break;
         case 2:
             xemCongViec();   //xem danh sách
+            break;
+        case 3:
+            giaoDienHeal();
             break;
         case 0:
             chay = false;

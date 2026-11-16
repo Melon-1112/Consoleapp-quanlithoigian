@@ -21,9 +21,15 @@
     <ClCompile Include="planner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="healer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="planner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="healer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
