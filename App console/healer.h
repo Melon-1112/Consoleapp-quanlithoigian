@@ -36,3 +36,4 @@ void nhapBuaAn(MealEntry& ba);
 void danhSachBaiTap(const std::vector<WorkoutSession>& ds);
 void danhSachBuaAn(const std::vector<MealEntry>& ds);
 void deXuatPhuongAn(int caloNap, int caloTieu);
+void quanlychitieu();    // quản lý chi tiêu //

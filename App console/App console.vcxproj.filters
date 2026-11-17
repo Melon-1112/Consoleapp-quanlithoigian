@@ -24,6 +24,9 @@
     <ClCompile Include="healer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="qlchitieu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="planner.h">
