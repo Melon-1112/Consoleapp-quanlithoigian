@@ -15,6 +15,10 @@ void typingEffect(string text) {
 
 int main()
 {
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+
+    docCongViec();
     
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);

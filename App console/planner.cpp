@@ -4,10 +4,192 @@
 #include <iomanip>
 #include <ctime>
 #include <string>
+#include <fstream>//<iostream> làm việc với bàn phím/màn hình (cin/cout), 
+//còn <fstream> làm việc với file thay vào đó.
+#include <filesystem>//Đường dẫn & hệ thống file 
+#include <cstdlib>//Thư viện tiện ích C
 using namespace std;
 planner dsViec[100];   // mảng chứa tối đa 100 công việc
 int soLuongViec = 0;  // số công việc hiện có trong mảng
 //khai biến các hàm ở trên cùng => biến toàn cục, 
+
+
+
+
+
+// Hàm trả về đường dẫn tuyệt đối tới tệp "TimeZ.txt".
+// Tệp này nằm trong thư mục AppData (Roaming) của tài khoản Windows đang đăng nhập.
+// Kiểu trả về: filesystem::path — là kiểu đường dẫn của thư viện chuẩn <filesystem>.
+filesystem::path layDuongDanFile()
+{
+    // appData: con trỏ wide-string sẽ được thư viện cấp phát để chứa giá trị biến môi trường.
+    // nullptr nghĩa là hiện tại chưa có dữ liệu nào.
+    wchar_t* appData = nullptr;
+
+    // doDai: độ dài (số ký tự) của chuỗi mà thư viện sẽ ghi ra. Biến này là tham số ra,
+    // nên sau khi gọi hàm ta sẽ biết chuỗi dài bao nhiêu.
+    size_t doDai = 0;
+
+    // Gọi _wdupenv_s để lấy giá trị biến môi trường "APPDATA".
+    // Trên Windows, APPDATA trỏ tới: C:\Users\<Tên người dùng>\AppData\Roaming
+    // Hàm trả về 0 nếu thành công, khác 0 nếu thất bại (ví dụ biến không tồn tại).
+    if (_wdupenv_s(&appData, &doDai, L"APPDATA") != 0
+        || appData == nullptr) // thêm kiểm tra con trỏ rỗng cho chắc chắn
+    {
+        // Nếu thất bại thì trả về một đường dẫn rỗng.
+        // {} là cách viết ngắn để khởi tạo giá trị mặc định (path rỗng) của kiểu trả về.
+        return {};
+    }
+
+    // Tạo đường dẫn bằng cách nối các thành phần bằng toán tử "/".
+    // Toán tử "/" của filesystem::path tự động thêm dấu phân cách phù hợp với hệ điều hành.
+    // Kết quả: C:\Users\<Tên người dùng>\AppData\Roaming\TimeZ\TimeZ.txt
+    filesystem::path duongDan =
+        filesystem::path(appData) / L"TimeZ" / L"TimeZ.txt";
+
+    // Quan trọng: _wdupenv_s cấp phát bộ nhớ bằng malloc, nên ta PHẢI tự giải phóng.
+    // Nếu quên dòng này sẽ bị rò rỉ bộ nhớ (memory leak).
+    free(appData);
+
+    // Trả đường dẫn đã tạo ra cho nơi gọi.
+    return duongDan;
+}
+
+
+// Hàm lưu danh sách công việc xuống tệp "TimeZ.txt".
+// Trả về true nếu lưu thành công, false nếu gặp lỗi.
+// Dùng biến toàn cục soLuongViec (số lượng công việc) và dsViec (mảng công việc).
+bool luuCongViec()
+{
+    // Lấy đường dẫn tuyệt đối của tệp cần lưu (do hàm layDuongDanFile() tạo ra).
+    filesystem::path duongDan = layDuongDanFile();
+
+    // Nếu đường dẫn rỗng nghĩa là lấy AppData thất bại → không thể lưu, dừng lại.
+    if (duongDan.empty())
+    {
+        return false;
+    }
+
+    // Tạo thư mục cha (thư mục "TimeZ") nếu chưa tồn tại.
+    // Tham số "loi" là error_code: nhận mã lỗi thay vì ném exception (ném lỗi có thể làm chương trình
+    // bị dừng đột ngột khi người dùng chỉ muốn báo lỗi thôi).
+    error_code loi;
+    filesystem::create_directories(duongDan.parent_path(), loi);
+
+    // Nếu có lỗi khi tạo thư mục (ví dụ: không có quyền ghi) → dừng.
+    if (loi)
+    {
+        return false;
+    }
+
+    // Mở tệp để ghi.
+    // ofstream = output file stream (dòng ghi). Tệp có sẵn sẽ bị ghi đè (truncate).
+    // ofstream nhận được filesystem::path nên không cần chuyển đổi sang wstring thủ công.
+    ofstream file(duongDan);
+
+    // is_open() kiểm tra tệp đã mở thành công hay chưa.
+    // Mở thất bại khi: tệp đang bị khóa, sai đường dẫn, không có quyền ghi...
+    if (!file.is_open())
+    {
+        return false;
+    }
+
+    // Duyệt qua từng công việc trong danh sách và ghi ra tệp, mỗi công việc 1 dòng.
+    for (int i = 0; i < soLuongViec; i++)
+    {
+        // Dấu ' ' giữa các trường: dấu phân cách giữa các cột dữ liệu.
+        // quoted(...) đặt dấu " quanh giá trị, để giữ nguyên cả khoảng trắng bên trong chuỗi.
+        //   ví dụ: viec = "Học C++" sẽ được ghi là: "Học C++"
+        //   nhờ vậy khi đọc lại bằng >> và quoted sẽ phân biệt được dấu " với khoảng trắng.
+        // quoted lấy từ <iomanip>.
+        file << dsViec[i].id << ' '
+            << quoted(dsViec[i].ngay) << ' '
+            << quoted(dsViec[i].gioBatDau) << ' '
+            << quoted(dsViec[i].viec) << ' '
+            << quoted(dsViec[i].uuTien) << ' '
+            << dsViec[i].tick << '\n';
+        // '\n' kết thúc dòng (xuống dòng).
+    }
+
+    // Đóng tệp để chắc chắn dữ liệu trong bộ đệm được ghi xuống đĩa.
+    // (Khi đối tượng ofstream bị hủy thì tệp cũng tự đóng, nhưng gọi tường minh rõ ràng hơn.)
+    file.close();
+
+    // fail() trả về true nếu có lỗi ghi (ví dụ: ổ đĩa đầy, tệp bị khóa).
+    // Đảo ngược lại để trả về true khi KHÔNG có lỗi.
+    return !file.fail();
+}
+
+
+
+// Hàm đọc danh sách công việc từ tệp "TimeZ.txt" và nạp vào bộ nhớ.
+// Sau khi hàm này chạy xong:
+//   - soLuongViec chứa số lượng công việc đã đọc được
+//   - dsViec[] chứa nội dung của các công việc đó
+void docCongViec()
+{
+    // Lấy đường dẫn tuyệt đối của tệp cần đọc (giống hàm lưu).
+    filesystem::path duongDan = layDuongDanFile();
+
+    // Không lấy được đường dẫn (lỗi môi trường) → không có gì để đọc, thoát hàm.
+    if (duongDan.empty())
+    {
+        return;
+    }
+
+    // Mở tệp để đọc.
+    // ifstream = input file stream (dòng đọc). Khác ofstream (dòng ghi) ở phía trên.
+    ifstream file(duongDan);
+
+    // Lần đầu chạy chưa có tệp thì bỏ qua, coi như chưa có công việc nào.
+    // is_open() trả về false nếu tệp không tồn tại hoặc không mở được.
+    if (!file.is_open())
+    {
+        return;
+    }
+
+    // Reset bộ đếm về 0 trước khi đọc, để tránh cộng dồn với dữ liệu cũ đang có trong bộ nhớ.
+    soLuongViec = 0;
+
+    // cv là một biến tạm để chứa công việc đang đọc.
+    // planner là kiểu struct mô tả một công việc; {} khởi tạo tất cả các trường về 0 / rỗng.
+    planner cv{};
+
+    // Vòng lặp đọc từng dòng một cho tới khi:
+    //   1) hết dữ liệu (file >> ... thất bại), HOẶC
+    //   2) đã đọc đủ 100 công việc (giới hạn kích thước mảng dsViec),
+    //   3) hoặc dữ liệu trong tệp bị sai định dạng (thiếu trường, thiếu dấu " ...).
+    while (soLuongViec < 100
+        && file >> cv.id          // đọc số nguyên id (không có dấu ")
+        >> quoted(cv.ngay)         // đọc chuỗi ngày, tự bỏ dấu " ở hai đầu
+        >> quoted(cv.gioBatDau)    // đọc chuỗi giờ bắt đầu
+        >> quoted(cv.viec)         // đọc chuỗi nội dung công việc
+        >> quoted(cv.uuTien)       // đọc chuỗi mức ưu tiên
+        >> cv.tick)                // đọc số tick (không có dấu ")
+    {
+        // Toán tử >> trên dòng ifstream trả về chính đối tượng file, và đối tượng này
+        // được chuyển đổi thành bool: true nếu đọc thành công, false nếu thất bại.
+        // Nhờ vậy, khi đọc lỗi thì vòng lặp tự dừng, không cần câu lệnh if riêng.
+
+        // Lưu công việc vừa đọc vào mảng, tại vị trí soLuongViec.
+        dsViec[soLuongViec] = cv;
+
+        // Tăng bộ đếm để sang công việc tiếp theo.
+        soLuongViec++;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Hàm lấy và in ngày giờ hiện tại
 void layTimer() {
@@ -249,7 +431,16 @@ void nhapPlan() { //Chức năng thêm công việc, tuii làmmmm//
     
     soLuongViec++;
     system("cls");
-    cout << "\nDa them cong viec thanh cong!\n";
+
+    if (luuCongViec())
+    {
+        cout << "\nDa them va luu cong viec thanh cong!\n";
+    }
+    else
+    {
+        cout << "\nDa them vao danh sach, nhung luu file that bai!"
+            << "\nCong viec moi co the mat khi thoat app.\n";
+    }
 }
 
 void xemCongViec()
