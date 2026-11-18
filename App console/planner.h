@@ -16,6 +16,7 @@ void typingEffect();
 void layTimer();
 int giaoDienPlan();
 void nhapPlan();
+void xoaCongViec();
 void xemCongViec();      // xem công việc hiện có //
 //
 void quanlychitieu();    // quản lý chi tiêu //

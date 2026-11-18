@@ -57,6 +57,7 @@ int main()
             << " 2. Xem danh sách công việc" << endl
             << " 3. Quản lý Sức khỏe" << endl
 			<< " 4. Quản lý chi tiêu" << endl
+            << " 5. Xóa công việc" << endl
             << " 0. Thoát \n\x1B[0m\n "<< endl;
 
         cout << "Nhap chuc nang ban chon: ";
@@ -78,6 +79,9 @@ int main()
         case 4:
             quanlychitieu();
 			break;
+        case 5:
+            xoaCongViec();
+            break;
         case 0:
             chay = false;
             break;

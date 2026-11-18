@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <ctime>
 #include <string>
+#include <sstream>
 #include <fstream>//<iostream> làm việc với bàn phím/màn hình (cin/cout), 
 //còn <fstream> làm việc với file thay vào đó.
 #include <filesystem>//Đường dẫn & hệ thống file 
@@ -160,17 +161,17 @@ void docCongViec()
     //   1) hết dữ liệu (file >> ... thất bại), HOẶC
     //   2) đã đọc đủ 100 công việc (giới hạn kích thước mảng dsViec),
     //   3) hoặc dữ liệu trong tệp bị sai định dạng (thiếu trường, thiếu dấu " ...).
-    while (soLuongViec < 100
-        && file >> cv.id          // đọc số nguyên id (không có dấu ")
-        >> quoted(cv.ngay)         // đọc chuỗi ngày, tự bỏ dấu " ở hai đầu
-        >> quoted(cv.gioBatDau)    // đọc chuỗi giờ bắt đầu
-        >> quoted(cv.viec)         // đọc chuỗi nội dung công việc
-        >> quoted(cv.uuTien)       // đọc chuỗi mức ưu tiên
-        >> cv.tick)                // đọc số tick (không có dấu ")
+    while (soLuongViec < 100 && (file >> ws))
     {
-        // Toán tử >> trên dòng ifstream trả về chính đối tượng file, và đối tượng này
-        // được chuyển đổi thành bool: true nếu đọc thành công, false nếu thất bại.
-        // Nhờ vậy, khi đọc lỗi thì vòng lặp tự dừng, không cần câu lệnh if riêng.
+        // Tệp hiện tại bắt đầu bằng ngày trong ngoặc kép; tệp cũ có thêm id.
+        cv.id = soLuongViec + 1;
+        if (file.peek() != '"' && !(file >> cv.id)) {
+            break;
+        }
+        if (!(file >> quoted(cv.ngay) >> quoted(cv.gioBatDau)
+                   >> quoted(cv.viec) >> quoted(cv.uuTien) >> cv.tick)) {
+            break;
+        }
 
         // Lưu công việc vừa đọc vào mảng, tại vị trí soLuongViec.
         dsViec[soLuongViec] = cv;
@@ -471,13 +472,13 @@ void xemCongViec()
         cout << "Chua co cong viec nao trong danh sach.\n";
         return;
     }
-    cout << "MUC DO UU TIEN | Ngay | Gio bat dau | Ten cong viec\n"<< endl;
+    cout << "STT | MUC DO UU TIEN | Ngay | Gio bat dau | Ten cong viec\n"<< endl;
 
     int i = 0;
     while (i < soLuongViec)
     {
         cout 
-            << dsViec[i].uuTien << " | "
+            << i + 1 << " | " << dsViec[i].uuTien << " | "
             << dsViec[i].ngay << " | "
             <<" " << dsViec[i].gioBatDau << "      | "
             << dsViec[i].viec << "\n";
@@ -534,4 +535,36 @@ bool kiemTraNam(int nam) {
     int namHienTai = lt.tm_year + 1900;
     bool namHopLe = (nam == namHienTai);
     return namHopLe;
+}
+
+void xoaCongViec() {
+    xemCongViec();
+    if (soLuongViec == 0) return;
+
+    cout << "Nhap STT cong viec can xoa (0 de huy): ";
+    string dong;
+    if (!getline(cin, dong)) return;
+
+    istringstream nhap(dong);
+    int stt;
+    char kyTuThua;
+    if (!(nhap >> stt) || (nhap >> kyTuThua) || stt < 0 || stt > soLuongViec) {
+        cout << "STT khong hop le.\n";
+        return;
+    }
+    if (stt == 0) return;
+
+    // Dịch các công việc phía sau sang trái một vị trí.
+    for (int i = stt - 1; i < soLuongViec - 1; i++) {
+        dsViec[i] = dsViec[i + 1];
+        dsViec[i].id = i + 1;
+    }
+    soLuongViec--;
+    dsViec[soLuongViec] = planner{};
+
+    if (luuCongViec()) {
+        cout << "Da xoa cong viec.\n";
+    } else {
+        cout << "Da xoa trong danh sach dang mo, nhung luu tep that bai.\n";
+    }
 }
