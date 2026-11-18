@@ -12,7 +12,7 @@ using namespace std;
 planner dsViec[100];   // mảng chứa tối đa 100 công việc
 int soLuongViec = 0;  // số công việc hiện có trong mảng
 //khai biến các hàm ở trên cùng => biến toàn cục, 
-
+int mucDo;
 
 
 
@@ -102,7 +102,8 @@ bool luuCongViec()
         //   ví dụ: viec = "Học C++" sẽ được ghi là: "Học C++"
         //   nhờ vậy khi đọc lại bằng >> và quoted sẽ phân biệt được dấu " với khoảng trắng.
         // quoted lấy từ <iomanip>.
-        file << dsViec[i].id << ' '
+        file 
+            
             << quoted(dsViec[i].ngay) << ' '
             << quoted(dsViec[i].gioBatDau) << ' '
             << quoted(dsViec[i].viec) << ' '
@@ -228,26 +229,30 @@ int giaoDienPlan() {
 
 
         
-        if (nhapNut == 0) {
-            
-            break; // Thoát menu quay về màn hình chính
-        }
-        else if (nhapNut == 1) {
+        switch (nhapNut) {
+        case 0:
+            break; // Thoat switch
+
+        case 1:
             nhapPlan();
-        }
-        else if (nhapNut == 2) {
+            break;
+
+        case 2:
             xemCongViec();
-        }
-        else if (nhapNut == 3) {
+            break;
+
+        case 3:
             cout << "Chuc nang sap xep dang phat trien!\n";
-        }
-        else {
+            break;
+
+        default:
             cout << "Khong ton tai chuc nang!\n";
+            break;
         }
 
         cout << "\nNhan Enter de tiep tuc...";
-        system("pause > nul"); // Dừng màn hình chờ người dùng bấm phím
-    }
+        system("pause > nul");
+     }
 
     return 0;
 }
@@ -376,7 +381,6 @@ void nhapPlan() { //Chức năng thêm công việc, tuii làmmmm//
         return;
     }
     cout << "\x1B[1;33m======== THÊM CÔNG VIỆC ========\x1B[0m\n";
-    
     while (true) {
         cout << " Nhap ngay (dd/mm/yyyy): ";
 
@@ -425,6 +429,20 @@ void nhapPlan() { //Chức năng thêm công việc, tuii làmmmm//
        
         cout << " Gio khong hop le, vui long nhap lai!\n";
     }
+    cout << endl << "Cac gia tri thu tu uu tien " << "[1].IMPORTAIN \t" << "[2].NECESSARY \t" << "[3].UN-NECESSARY" << endl;
+    cout << "Nhap muc do uu tien: ";
+    cin >> mucDo;
+    if (mucDo == 1) {
+        dsViec[soLuongViec].uuTien = "IMPORTAIN";
+    }
+    else if (mucDo == 2) {
+        dsViec[soLuongViec].uuTien = "NECESSARY";
+    }
+    else if (mucDo == 3) {
+        dsViec[soLuongViec].uuTien = "UN-NECESSARY";
+    }
+    
+    cout << endl;
     
     dsViec[soLuongViec].id = soLuongViec + 1;  // 0->1//
     //gán id cho từng công việc, vd:( 1 | Đi học)//
@@ -453,14 +471,67 @@ void xemCongViec()
         cout << "Chua co cong viec nao trong danh sach.\n";
         return;
     }
-    cout << "ID |       Ngay      | Gio bat dau | Ten cong viec\n";
-    int i = 0; //tạo i để duyệt từ ô đầu tiên tới ô cuối cùng có dữ liệu công việc//
+    cout << "MUC DO UU TIEN | Ngay | Gio bat dau | Ten cong viec\n"<< endl;
+
+    int i = 0;
     while (i < soLuongViec)
     {
-        cout << dsViec[i].id << "  |    " <<dsViec[i].ngay<< "    |    " << dsViec[i].gioBatDau << "    | " << dsViec[i].viec << "\n";
+        cout 
+            << dsViec[i].uuTien << " | "
+            << dsViec[i].ngay << " | "
+            <<" " << dsViec[i].gioBatDau << "      | "
+            << dsViec[i].viec << "\n";
+
         i++;
+    
+    }
+    
+    
+}
+int giaTriUuTien(string uuTien) {
+    if (uuTien == "IMPORTAIN") {
+        return 1;
+    }
+    else if (uuTien == "NECESSARY") {
+        return 2;
+    }
+    else if (uuTien == "UN-NECESSARY") {
+        return 3;
+    }
+
+    return 4;
+}
+//Thuat toan sap xep
+void selectionSort() {
+    int min;
+    for (int i = 0; i < soLuongViec - 1; i++) {
+        min = i;
+        for (int j = i + 1;j < soLuongViec; j++) {
+            if (giaTriUuTien(dsViec[j].uuTien) < giaTriUuTien(dsViec[i].uuTien)) {
+                min = j;
+            }
+        }
+        if (min != i) {
+            planner tam = dsViec[i];
+            dsViec[i] = dsViec[min];
+            dsViec[min] = tam;
+
+        }
+
     }
 
 
+}
 
+// Kiem tra nam nhap vao co bang nam hien tai khong.
+bool kiemTraNam(int nam) {
+    time_t tgian = time(nullptr);
+    tm lt = {};
+    if (localtime_s(&lt, &tgian) != 0) {
+        return false;
+    }
+
+    int namHienTai = lt.tm_year + 1900;
+    bool namHopLe = (nam == namHienTai);
+    return namHopLe;
 }
